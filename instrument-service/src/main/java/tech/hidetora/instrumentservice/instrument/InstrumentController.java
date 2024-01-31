@@ -21,7 +21,7 @@ public class InstrumentController {
     }
 
     @GetMapping("{type}")
-    @Cacheable(cacheNames = "instrumentTypes")
+    @Cacheable(cacheNames = "instrumentTypes", keyGenerator = "tenantKeyGenerator")
     public List<Instrument> getInstrumentByType(@PathVariable String type) {
         log.info("Returning all instrument of type: {}", type);
         return instrumentRepository.findByType(type);

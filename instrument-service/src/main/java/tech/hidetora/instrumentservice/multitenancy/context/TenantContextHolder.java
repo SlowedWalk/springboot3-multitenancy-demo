@@ -3,7 +3,7 @@ package tech.hidetora.instrumentservice.multitenancy.context;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TenantContext {
+public class TenantContextHolder {
     private static final ThreadLocal<String> tenantId = new InheritableThreadLocal<>();
 
     public static void setTenantId(String tenant) {

@@ -4,7 +4,7 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.stereotype.Component;
-import tech.hidetora.instrumentservice.multitenancy.context.TenantContext;
+import tech.hidetora.instrumentservice.multitenancy.context.TenantContextHolder;
 
 import java.util.Map;
 import java.util.Objects;
@@ -14,7 +14,7 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
 
     @Override
     public String resolveCurrentTenantIdentifier() {
-        return Objects.requireNonNullElse(TenantContext.getTenantId(), "PUBLIC");
+        return Objects.requireNonNullElse(TenantContextHolder.getTenantId(), "PUBLIC");
     }
 
     @Override

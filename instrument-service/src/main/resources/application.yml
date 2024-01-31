@@ -1,11 +1,17 @@
 spring:
-  threads:
-    virtual:
-      enabled: true
+#  threads:
+#    virtual:
+#      enabled: true
   application:
     name: INSTRUMENT-SERVICE
+  datasource:
+    url: jdbc:postgresql://localhost:5432/instrument_service_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: on
+
   flyway:
     enabled: true
     create-schemas: true
@@ -47,3 +53,5 @@ management:
         enabled: true
       show-details: always
       show-components: always
+server:
+  port: 8181
