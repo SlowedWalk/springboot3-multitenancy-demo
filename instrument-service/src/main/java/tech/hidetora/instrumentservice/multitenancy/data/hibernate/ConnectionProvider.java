@@ -5,21 +5,25 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.stereotype.Component;
+import tech.hidetora.instrumentservice.multitenancy.tenant.TenantDetailsService;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
+import static tech.hidetora.instrumentservice.multitenancy.data.hibernate.TenantIdentifierResolver.DEFAULT_SCHEMA;
+
 @Component
 @RequiredArgsConstructor
 public class ConnectionProvider implements MultiTenantConnectionProvider, HibernatePropertiesCustomizer {
 
     private final DataSource dataSource;
+    private final TenantDetailsService tenantDetailsService;
 
     @Override
     public Connection getAnyConnection() throws SQLException {
-        return getConnection("PUBLIC");
+        return getConnection(DEFAULT_SCHEMA);
     }
 
     @Override
@@ -30,13 +34,13 @@ public class ConnectionProvider implements MultiTenantConnectionProvider, Hibern
     @Override
     public Connection getConnection(Object tenantIdentifier) throws SQLException {
         var connection = dataSource.getConnection();
-        connection.setSchema((String) tenantIdentifier);
+        connection.setSchema(tenantDetailsService.loadTenantByIdentifier((String) tenantIdentifier).schema());
         return connection;
     }
 
     @Override
     public void releaseConnection(Object tenantIdentifier, Connection connection) throws SQLException {
-        connection.setSchema("PUBLIC");
+        connection.setSchema(DEFAULT_SCHEMA);
         connection.close();
     }
 

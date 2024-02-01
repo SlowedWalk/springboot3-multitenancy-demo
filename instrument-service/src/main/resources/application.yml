@@ -1,7 +1,9 @@
+server:
+  port: 0
 spring:
-#  threads:
-#    virtual:
-#      enabled: true
+  threads:
+    virtual:
+      enabled: true
   application:
     name: INSTRUMENT-SERVICE
   datasource:
@@ -11,13 +13,12 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: on
+    hibernate:
+      ddl-auto: create
 
   flyway:
     enabled: true
     create-schemas: true
-multitenancy:
-  http:
-    header-name: X-TenantId
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}] tenantId=%X{tenantId:-}"
@@ -53,5 +54,16 @@ management:
         enabled: true
       show-details: always
       show-components: always
-server:
-  port: 8181
+multitenancy:
+  security:
+    issuer-base-uri: http://localhost:8080
+  tenants:
+    - id: dukes
+      schema: DUKES
+      enabled: true
+    - id: beans
+      schema: BEANS
+      enabled: true
+    - id: trixie
+      schema: TRIXIE
+      enabled: false

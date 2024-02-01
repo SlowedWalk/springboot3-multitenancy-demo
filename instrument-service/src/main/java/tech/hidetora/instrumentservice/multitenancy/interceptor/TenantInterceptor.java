@@ -12,7 +12,7 @@ import org.springframework.web.filter.ServerHttpObservationFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import tech.hidetora.instrumentservice.multitenancy.context.TenantContextHolder;
-import tech.hidetora.instrumentservice.multitenancy.resolver.HttpHeaderTenantResolver;
+import tech.hidetora.instrumentservice.multitenancy.context.resolver.HttpHeaderTenantResolver;
 
 @Component
 @RequiredArgsConstructor

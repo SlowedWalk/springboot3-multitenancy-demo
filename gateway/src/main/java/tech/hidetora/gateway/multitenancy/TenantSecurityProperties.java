@@ -1,4 +1,4 @@
-package tech.hidetora.gateway.multitenancy.gateway;
+package tech.hidetora.gateway.multitenancy;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

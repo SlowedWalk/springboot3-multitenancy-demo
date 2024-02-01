@@ -5,14 +5,25 @@ spring:
     name: GATEWAY
   cloud:
     gateway:
+      default-filters:
+        - SaveSession
+        - TokenRelay
       routes: # https://cloud.spring.io/spring-cloud-gateway/reference/html/#the-route-definition
         - id: instruments-route
-          uri: http://localhost:8181
+          uri: ${INSTRUMENT_SERVICE_URL:http://localhost:8181}
           predicates:
-            - Path=/instruments/**
             - Host={segment}.localhost # for demo purpose we use subdomain to route to the right tenant, but for production I should use a header since I don't know how to create a DNS entry for each tenant
+            - Path=/instruments/**
           filters:
             - AddRequestHeader=X-TenantId, {segment}
+        - id: authorization-route
+          uri: ${AUTHORIZATION_SERVICE_URL:http://localhost:8080}
+          predicates:
+            - Path=/oauth2/**
+        - id: tenant-route
+          uri: ${TENANT_SERVICE_URL:http://localhost:8181}
+          predicates:
+            - Path=/tenant/**
 
 #          - id: prometheus
 #            uri: http://prometheus:9090
@@ -109,6 +120,6 @@ management:
 
 tenant:
   security:
-    client-id: edge-service
-    client-secret: rocking-secret
+    client-id: gateway-service
+    client-secret: gateway-secret
     issuer-base-uri: http://localhost:8080

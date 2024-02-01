@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Component
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver, HibernatePropertiesCustomizer {
-
+    public static final String DEFAULT_SCHEMA = "PUBLIC";
     @Override
     public String resolveCurrentTenantIdentifier() {
         return Objects.requireNonNullElse(TenantContextHolder.getTenantId(), "PUBLIC");
