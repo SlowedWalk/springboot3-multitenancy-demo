@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/instrument-service/src/main/resources/db/migration/default/V1__Creative_table.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/instrument-service/src/main/resources/db/migration/default/V1__Creative_table.sql.old" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/instrument-service/src/main/resources/db/migration/tenant/V1__Init_schema.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/instrument-service/src/main/resources/db/migration/tenant/V1__Init_schemas.sql.old" dialect="PostgreSQL" />
   </component>

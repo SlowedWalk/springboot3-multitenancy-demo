@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.Objects;
 
 @Component
-public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver, HibernatePropertiesCustomizer {
-    public static final String DEFAULT_SCHEMA = "PUBLIC";
+public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver<String>, HibernatePropertiesCustomizer {
+    public static final String DEFAULT_SCHEMA = "public";
     @Override
     public String resolveCurrentTenantIdentifier() {
-        return Objects.requireNonNullElse(TenantContextHolder.getTenantId(), "PUBLIC");
+        return Objects.requireNonNullElse(TenantContextHolder.getTenantId(), DEFAULT_SCHEMA);
     }
 
     @Override

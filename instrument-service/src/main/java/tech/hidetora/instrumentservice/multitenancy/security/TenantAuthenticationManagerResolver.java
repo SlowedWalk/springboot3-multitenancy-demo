@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class TenantAuthenticationManagerResolver implements AuthenticationManagerResolver<HttpServletRequest> {
     private static final Map<String, AuthenticationManager> authenticationManagers = new ConcurrentHashMap<>();
-    private final TenantSecurityProperties tenantSecurityProperties;
+//    private final TenantSecurityProperties tenantSecurityProperties;
 
     @Override
     public AuthenticationManager resolve(HttpServletRequest request) {
@@ -25,8 +25,8 @@ public class TenantAuthenticationManagerResolver implements AuthenticationManage
     }
 
     private AuthenticationManager buildAuthenticationManager(String tenantId) {
-        var issuerBaseUri = tenantSecurityProperties.issuerBaseUri();
-        var jwtAuthenticationprovider = new JwtAuthenticationProvider(JwtDecoders.fromIssuerLocation(String.valueOf(issuerBaseUri)));
+        var issuerBaseUri = "http://localhost:8080";
+        var jwtAuthenticationprovider = new JwtAuthenticationProvider(JwtDecoders.fromIssuerLocation(issuerBaseUri));
         return jwtAuthenticationprovider::authenticate;
     }
 }

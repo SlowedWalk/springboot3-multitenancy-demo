@@ -1,13 +1,14 @@
 package tech.hidetora.instrumentservice.multitenancy.context;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import tech.hidetora.instrumentservice.multitenancy.exceptions.TenantNotFoundException;
 
 @Slf4j
 public class TenantContextHolder {
-    private static final ThreadLocal<String> tenantId = new InheritableThreadLocal<>();
+    private static final ThreadLocal<String> tenantId = new ThreadLocal<>();
 
     public static void setTenantId(String tenant) {
 //        String currentTenant = tenant != null ? tenant : "PUBLIC";
@@ -16,6 +17,7 @@ public class TenantContextHolder {
         tenantId.set(tenant);
     }
 
+    @Nullable
     public static String getTenantId() {
         return tenantId.get();
     }

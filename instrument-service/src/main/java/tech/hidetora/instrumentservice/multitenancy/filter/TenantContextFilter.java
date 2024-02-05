@@ -53,7 +53,7 @@ public class TenantContextFilter extends OncePerRequestFilter {
 
     private boolean isTenantValid(String tenantIdentifier) {
         var tenantDetails = tenantDetailsService.loadTenantByIdentifier(tenantIdentifier);
-        return tenantDetails.enabled();
+        return tenantDetails != null && tenantDetails.enabled();
     }
 
     private void configureLogs(String tenantId) {

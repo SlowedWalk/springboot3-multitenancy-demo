@@ -1,5 +1,6 @@
 package tech.hidetora.instrumentservice.multitenancy.tenant;
 
+import org.springframework.lang.Nullable;
 import tech.hidetora.instrumentservice.multitenancy.exceptions.TenantNotFoundException;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public interface TenantDetailsService {
 
     List<TenantDetails> loadAllTenants();
 
+    @Nullable
     TenantDetails loadTenantByIdentifier(String identifier) throws TenantNotFoundException;
 
 }

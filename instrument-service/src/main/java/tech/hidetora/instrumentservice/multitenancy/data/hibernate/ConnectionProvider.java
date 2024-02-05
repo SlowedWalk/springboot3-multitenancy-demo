@@ -16,7 +16,7 @@ import static tech.hidetora.instrumentservice.multitenancy.data.hibernate.Tenant
 
 @Component
 @RequiredArgsConstructor
-public class ConnectionProvider implements MultiTenantConnectionProvider, HibernatePropertiesCustomizer {
+public class ConnectionProvider implements MultiTenantConnectionProvider<String>, HibernatePropertiesCustomizer {
 
     private final DataSource dataSource;
     private final TenantDetailsService tenantDetailsService;
@@ -32,14 +32,14 @@ public class ConnectionProvider implements MultiTenantConnectionProvider, Hibern
     }
 
     @Override
-    public Connection getConnection(Object tenantIdentifier) throws SQLException {
+    public Connection getConnection(String tenantIdentifier) throws SQLException {
         var connection = dataSource.getConnection();
-        connection.setSchema(tenantDetailsService.loadTenantByIdentifier((String) tenantIdentifier).schema());
+        connection.setSchema(tenantDetailsService.loadTenantByIdentifier(tenantIdentifier).schema());
         return connection;
     }
 
     @Override
-    public void releaseConnection(Object tenantIdentifier, Connection connection) throws SQLException {
+    public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
         connection.setSchema(DEFAULT_SCHEMA);
         connection.close();
     }

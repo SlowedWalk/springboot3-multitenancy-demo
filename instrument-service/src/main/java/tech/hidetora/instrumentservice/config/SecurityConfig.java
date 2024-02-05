@@ -12,6 +12,7 @@ import tech.hidetora.instrumentservice.multitenancy.filter.TenantContextFilter;
 
 @Configuration(proxyBeanMethods = false)
 public class SecurityConfig {
+
     @Bean
     SecurityFilterChain securityFilterChain(
             HttpSecurity http,

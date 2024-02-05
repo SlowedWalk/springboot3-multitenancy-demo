@@ -120,6 +120,6 @@ management:
 
 tenant:
   security:
-    client-id: gateway-service
-    client-secret: gateway-secret
+    client-id: edge-service
+    client-secret: rocking-secret
     issuer-base-uri: http://localhost:8080
