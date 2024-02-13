@@ -10,7 +10,7 @@ import java.util.List;
  * It is used throughout the framework as a tenant DAO.
  */
 public interface TenantDetailsService {
-    TenantDetails saveTenant(TenantDetails tenantDetails);
+//    TenantDetails saveTenant(TenantDetails tenantDetails);
 
     List<TenantDetails> loadAllTenants();
 

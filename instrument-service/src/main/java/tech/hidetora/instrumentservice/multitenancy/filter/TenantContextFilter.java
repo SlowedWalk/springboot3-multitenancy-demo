@@ -6,13 +6,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.filter.ServerHttpObservationFilter;
 import tech.hidetora.instrumentservice.multitenancy.context.TenantContextHolder;
-import tech.hidetora.instrumentservice.multitenancy.exceptions.TenantNotFoundException;
 import tech.hidetora.instrumentservice.multitenancy.context.resolver.HttpHeaderTenantResolver;
+import tech.hidetora.instrumentservice.multitenancy.exceptions.TenantResolutionException;
 import tech.hidetora.instrumentservice.multitenancy.tenant.TenantDetailsService;
 
 import java.io.IOException;
@@ -32,16 +33,15 @@ public class TenantContextFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         var tenantIdentifier = httpRequestTenantResolver.resolveTenantId(request);
 
-        if (StringUtils.hasText(tenantIdentifier)) {
-            if (!isTenantValid(tenantIdentifier)) {
-                throw new TenantNotFoundException();
-            }
+        if (StringUtils.hasText(tenantIdentifier) && isTenantValid(tenantIdentifier)) {
             TenantContextHolder.setTenantId(tenantIdentifier);
             configureLogs(tenantIdentifier);
             configureTraces(tenantIdentifier, request);
+        } else {
+            throw new TenantResolutionException("A valid tenant must be specified for requests to %s".formatted(request.getRequestURI()));
         }
 
         try {
@@ -49,6 +49,11 @@ public class TenantContextFilter extends OncePerRequestFilter {
         } finally {
             clearTenant();
         }
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/actuator");
     }
 
     private boolean isTenantValid(String tenantIdentifier) {
@@ -69,5 +74,4 @@ public class TenantContextFilter extends OncePerRequestFilter {
         MDC.remove("tenantId");
         TenantContextHolder.clearTenant();
     }
-
 }

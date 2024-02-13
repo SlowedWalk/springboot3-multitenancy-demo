@@ -1,6 +1,5 @@
 package tech.hidetora.instrumentservice.multitenancy.data.hibernate;
 
-import lombok.RequiredArgsConstructor;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
@@ -15,11 +14,15 @@ import java.util.Map;
 import static tech.hidetora.instrumentservice.multitenancy.data.hibernate.TenantIdentifierResolver.DEFAULT_SCHEMA;
 
 @Component
-@RequiredArgsConstructor
 public class ConnectionProvider implements MultiTenantConnectionProvider<String>, HibernatePropertiesCustomizer {
 
     private final DataSource dataSource;
     private final TenantDetailsService tenantDetailsService;
+
+    public ConnectionProvider(DataSource dataSource, TenantDetailsService tenantDetailsService) {
+        this.dataSource = dataSource;
+        this.tenantDetailsService = tenantDetailsService;
+    }
 
     @Override
     public Connection getAnyConnection() throws SQLException {
@@ -33,8 +36,11 @@ public class ConnectionProvider implements MultiTenantConnectionProvider<String>
 
     @Override
     public Connection getConnection(String tenantIdentifier) throws SQLException {
-        var connection = dataSource.getConnection();
-        connection.setSchema(tenantDetailsService.loadTenantByIdentifier(tenantIdentifier).schema());
+        var tenantDetails = tenantDetailsService.loadTenantByIdentifier(tenantIdentifier);
+        var schema = tenantDetails != null ? tenantDetails.schema() : tenantIdentifier;
+
+        Connection connection = dataSource.getConnection();
+        connection.setSchema(schema);
         return connection;
     }
 
